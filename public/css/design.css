@@ -1,0 +1,20 @@
+body#bdy{
+  background-color: navajowhite;
+}
+li:hover
+{
+  background-color: aqua;
+
+}
+#nav1
+{
+  background-color: cyan;
+}
+#str,#anch_tag
+{
+  color: slateblue;
+}
+#tag
+{
+  color:dodgerblue;
+}
