@@ -15,27 +15,19 @@ var login = function(requestStatus)
   eventEmitter.call(this);
   util.inherits(login, eventEmitter);
 
-//var loginEvent = new login();
-this.isValidate = function () {
-console.log(email);
-  if(email=="")
-  {
-      self.emit("validationEmpty","empty",null);
-  }
-  else if(password=="")
-  {
-        self.emit("validationEmpty",null,"empty");
-  }
-};
-
-
+this.validatePwd=function()
+{
+  if(req.password.length >=3)
+   return true;
+   return false;
+}
 this.checklogin = function()
  {
    try{
 
      ref.orderByChild("email").equalTo(requestStatus.email).once("value",function(snapshot)
     {
-     //console.log(snapshot.val());
+    //  console.log("hello");
      if (snapshot.val()!==null) {
      snapshot.forEach(function(data)
       {
@@ -44,10 +36,9 @@ this.checklogin = function()
       var db_password=db_data.password;
 
        if(db_password==requestStatus.password)
-         {
-          self.emit("checked","success",req);
-
-         }
+          {
+          self.emit("checked",true,null);
+           }
         else
         {
           self.emit("checked",null,true);

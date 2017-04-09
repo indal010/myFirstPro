@@ -34,13 +34,17 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-            <a class="navbar-brand" id="anch_tag" href="#home">Home</a>
+            <ul class="nav navbar-nav">
+              <li>
+              <li><a href="#login"><b>Home</b><span></span></a></li>
+
+            </ul>
             <a href="#welcome" id="resultPage"></a>
           </div>
           <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav nav navbar-right">
               <li>
-                <a href="#login">Login<span class="glyphicon glyphicon-log-in"></span></a></li>
+                <!-- <a href="#login">Login<span class="glyphicon glyphicon-log-in"></span></a></li> -->
               <li><a href="#signup">Signup<span class="glyphicon glyphicon-user"></span></a>
               </li>
               <!-- <li><a href="#welcomepage">welcome</a></li> -->
@@ -57,10 +61,9 @@
 
 <script id="home-page-template" type="text/x-handlebars-template">
   <div id="home-page" class="page active">
-    <h3>
-      <center><strong><marquee>WELCOME TO MY <u><i>SINGLE PAGE APPLICATION</i></u></marquee></strong></center>
 
-    </h3>
+
+
   </div>
 </script>
 
@@ -72,15 +75,9 @@
 
 <script id="fail-page-template" type="text/x-handlebars-template">
   <div id="fail-page" class="page active">
-      <!-- <center><strong><marquee>WELCOME TO MY <u><i>SINGLE PAGE APPLICATION</i></u></marquee></strong></center> -->
-
-
     </div>
   </div>
 </script>
-
-
-
 <script id="login-page-template" type="text/x-handlebars-template">
   <div id="about-page" class="page">
     <div class="container-fluid">
@@ -92,15 +89,15 @@
             <div class="arrange">
               <label for="email_id">Email id:</label>
               <i class="glyphicon glyphicon-user"></i>
-              <input type="text" id="email_id" class="form-control" placeholder="Email id" required><br><br>
+              <input type="email" id="email_id" class="form-control" placeholder="Email id" required><br><br>
 
 
               <label for="password">Password:</label>
               <i class="glyphicon glyphicon-lock"></i>
               <input type="password" id="password" class="form-control" placeholder="Password" required>
               <p id="d"></p><br>
-              <button type="button" id="login1" class="btn btn-success">Submit</button>
-
+              <button type="button" id="login1" class="btn btn-success">Submit</button><br>
+              <span class="sp">New user?</span><a href="#signup">  register here</a>
             </div>
 
           </form>
@@ -166,7 +163,9 @@
               <label>Password</label><input type="password" class="form-control" id="Password">
               <label>Retype Password</label><input type="password" class="form-control" id="rPassword"><br>
               <button type="button" class="btn btn-success" id="submit">Submit</button>
-              <button type="reset" class="btn btn-danger">Reset</button>
+              <button type="reset" class="btn btn-danger">Reset</button><br>
+              <span class="sp">already registered?</span>
+              <a href="#login">click here to login</a>
             </div>
           </form>
         </div>

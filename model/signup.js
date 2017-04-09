@@ -1,5 +1,5 @@
-var	firebase = require('../config.js'),
- usersRef = firebase.database().ref();
+var	firebase = require('../config'),
+ dbRef = firebase.database().ref();
  var EventEmitter = require('events').EventEmitter;
  var util = require('util');
 
@@ -10,75 +10,45 @@ var	firebase = require('../config.js'),
 		util.inherits(signup, EventEmitter);
 		var signupEvent = new signup();
 
-		signup.prototype.isValidate = function (signupdata) {
-		        console.log("I am in isValidate Method");
-						var fname = signupdata.fname;
-						var lname = signupdata.lname;
-		        var email = signupdata.email;
-		        var createPass = signupdata.createPass;
-            var confirmPass = signupdata.confirmPass;
-						var mob = signupdata.mob;
-		        if (fname == "" || lname == "" || email == "" || createPass == "" || confirmPass =="" || mob == "") {
-		            if (fname == "" && lname == "" && email == "" && createPass == "" && confirmPass =="" && mob == "") {
-										return false ;
-		            }
-		            if (fname == "") {
-		                return false ;
-		            } else if(lname == "") {
-		                return false ;
-		            } else if(email == "") {
-										return false ;
-								} else if(createPass == "") {
-									return false;
-								}else if(confirmPass == "") {
-									return false;
-								}
-								else if(mob == "") {
-										return false;
-								}
-		        } else if (fname == undefined || lname == undefined || email == undefined || createPass == undefined || confirmPass == undefined || mob == undefined) {
-		            if (fname == undefined && lname == undefined && email == undefined && createPass == undefined && confirmPass == undefined && mob == undefined) {
-		                  return false;
-		              }
-									if (fname == undefined) {
-			                return false ;
-			            } else if(lname == undefined) {
-			                return false ;
-			            } else if(email == undefined) {
-											return false ;
-									} else if(createPass == undefined) {
-  									return false;
-  								}else if(confirmPass == undefined) {
-  									return false;
-  								}else if(mob == undefined) {
-											return false;
-									}
-		            return false;
-		      }
-		      return true;
+		signup.prototype.isValidate = function (signupdata)
+      {
+		        //console.log("I am in isValidate Method");
+            username=signupdata.name;
+            // useremail=signupdata.email;
+            password1=signupdata.password1;
+            password2=signupdata.password2;
+            if(password1.length<3||password2.length<3||password1!==password2||username.length!=0)
+            {
+              return false;
+            }
+            return true;
 		}
 
 
-signup.prototype.saveUser = function(bodydata){
-
-  usersRef.orderByChild("email").equalTo(bodydata.email).once("value", function(data) {
-        if(data.val()!==null)
+signup.prototype.register = function(signupdata)
+ {
+   console.log("hello register");
+  username=signupdata.name;
+  useremail=signupdata.email;
+  password1=signupdata.password1;
+  dbRef.orderByChild("email").equalTo(useremail).once("value", function(snapshot) {
+        if(snapshot.val()!==null)
         {
-            data.forEach(function(snap) {
+            snapshot.forEach(function(snap) {
                 console.log("already user");
-                signupEvent.emit("signup1","email already in use");
+                signupEvent.emit("saved",false);
             });
         }
         else
         {
-          console.log(bodydata);
-          usersRef.push().setWithPriority(bodydata, 0 - Date.now());
-          usersRef.once("value", function(data) {
-          console.log("signup completed");
-          signupEvent.emit("signup2","regiter Successfully");
+          dbRef.push().set({
+          name:username,
+          email:useremail,
+          password:password1
           });
+          signupEvent.emit("saved",true);
         }
-});
+  });
 }
 
 module.exports = signupEvent;

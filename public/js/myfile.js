@@ -1,22 +1,4 @@
-// var cookie1=document.cookie
-//  console.log(cookie1.length);
-// if(cookie1.length>0)
-// {
-//       console.log("hello");
-// }
-// else {
-//var temp = [];
-//var port=process.env.PORT;
-
-
-
-
 $(document).ready(function() {
-
-
-
-
-
   $(document).on("click","#home1",function()
     {
       $.ajax({
@@ -25,8 +7,6 @@ $(document).ready(function() {
           //dataType: 'JSON',
          success: function(response) {
           // console.log('page was loaded', response);
-          // if(response.status==true)
-          //     setResult();
             if(response.status==true)
                 homepage();
           //if(document.cookie===undefined)
@@ -98,13 +78,32 @@ $.ajax({
     var email_id = $("#email_id").val();
     var password1 = $("#Password").val();
     var password2 = $("#rPassword").val();
+    $(".validation").remove();
+    var name_regx = /^[a-zA-Z ]{2,30}$/;
+    var email_regx = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if(!name_regx.test(name))
+       {
+         $("#name").after("<p class='validation' style='color:red;'>Enter  valid name</p>");
+
+       }
+    else if(!email_regx.test(email_id))
+    $("#email_id").after("<p class='validation' style='color:red;'>Enter a valid email address</p>");
+    else if(password1.length<3||password2.length<3||password1!==password2)
+    {
+      $("#Password").after("<p class='validation' style='color:red;'>Enter a valid password</p>");
+      $("#rPassword").after("<p class='validation' style='color:red;'>Enter a valid password</p>");
+    }
+    else {
+
     var signUp={
              name:name,
              email:email_id,
              password1:password1,
              password2:password2
         };
-      ajaxCall(signUp,"signup");
+      ajaxsignUpCall(signUp);
+    }
   });
 
   $("#login1").click(function() {
@@ -114,11 +113,15 @@ $.ajax({
       email:userEmail,
       password:userPassword
     };
-     ajaxCall(login,"login");
-});
-
-
-
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+     $(".validation").remove();
+     if(!re.test(userEmail))
+      $("#email_id").after("<p class='validation' style='color:red;'>Enter a valid email address</p>");
+    else  if(userPassword.length<=5)
+        $("#password").after("<p class='validation' style='color:red;'>Enter atleast 8 digit password</p>");
+        else
+         ajaxloginCall(login,"login");
+  });
 });
 
 
@@ -130,46 +133,71 @@ function setResult()
             //type:"GET",
               dataType:'html',
               success: function(data,textStatus,jqXHR)
-                 {
+                   {
+                     console.log("printed");
                         $("body").html(data);
                           }
                     });
 }
 
-function ajaxCall(userPassedObject,page)
+function ajaxloginCall(userPassedObject)
 {
   $.ajax({
 
-    url: "/"+page,
+    url: "/login",
     type: "POST",
     dataType: 'JSON',
     data:userPassedObject,
-    success: function(response) {
-      console.log(response.msg);
+    success: function(response)
+     {
+      console.log(response.keys);
+      m=response.msg;
       console.log('page was loaded', response);
       $(".validation").remove();
-      if(response.status==true && page=="login")
+      if(response.status==true)
       {
          setResult();
       }
-     else if(response.msg=="email should not be empty" && page=="login")
-      {
-        console.log("working fine");
-         $("#email_id").after("<p class='validation' style='color:red;'>Please enter email address</p>")
-        //$("#login1").after(response.msg);
-      }
-      else if(response.msg=="password should not be empty" && page=="login")
-       {
-         console.log("working fine");
-          $("#password").after("<p class='validation' style='color:red;'>Please enter your password</p>")
-         //$("#login1").after(response.msg);
-       }
+      else if(response.status==false&&response.msg=="unauthorized user")
+      $("#password").after("<p class='validation' style='color:red;'>authentication fail</p>");
+      else if(response[0].param=="email")
+     $("#email_id").after("<p class='validation' style='color:red;'>Enter a valid email address</p>");
+      else if(response[0].param=="")
+      $("#password").after("<p class='validation' style='color:red;'>Enter atleast 8 digit password</p>");
+
     },
     error: function(error) {
       console.log("page was not loaded ", error);
     }
 });
 };
+
+
+function ajaxsignUpCall(userPassedObject)
+{
+  $.ajax({
+
+    url: "/signup",
+    type: "POST",
+    dataType: 'JSON',
+    data:userPassedObject,
+    success: function(response)
+     {
+       if(response.status===true)
+        {
+          console.log("successfully registered");
+            alert("Registered successfully");
+            //document.cookie="key="+JSON.stringify(userPassedObject);
+            //homepage();
+
+        }
+    },
+    error: function(error) {
+      console.log("page was not loaded ", error);
+    }
+});
+};
+
 
 
 
@@ -195,6 +223,3 @@ function ajaxCall(userPassedObject,page)
                 }
                       });
   }
-
-
-//}
